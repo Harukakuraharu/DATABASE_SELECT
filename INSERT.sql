@@ -34,11 +34,24 @@ values (1, 'Heaven and Hell', '00:06:57'), (1, 'Wishing Well', '00:04:04'), (2, 
 	(5, 'You Fool No One', '00:04:59'), (6, 'Sweet Home Alabama', '00:04:45'), (6, 'Free Bird', '00:09:09');
 
 insert into songs (album_id, name_song, duration_song)
-values (2, 'Iron Man', '00:06:12')
+values (2, 'Iron Man', '00:06:12');
 
 update songs 
 set name_song = 'Throw My Bones'
 where song_id = 10; 
+
+--для задания 2.5
+insert into songs (album_id, name_song, duration_song)
+values (2, 'Myself', '00:06:12');
+
+insert into songs (album_id, name_song, duration_song)
+values (2, 'My', '00:06:12');
+
+delete from songs 
+where song_id = 14;
+
+delete from songs 
+where song_id = 15;
 
 --select * from songs;
 

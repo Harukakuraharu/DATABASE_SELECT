@@ -2,9 +2,9 @@
 select name_song, duration_song from songs
 where duration_song = (select max(duration_song) FROM songs);
 
---задание 2.2
+--задание 2.2 (исправленное)
 select name_song, duration_song as dur from songs
-where duration_song > '00:03:30'
+where duration_song >= '00:03:30'
 order by dur desc;
 
 --задание 2.3
@@ -15,9 +15,10 @@ where year_release between 2018 and 2020;
 select artist_name from artists
 where artist_name not like '% %';
 
---задание 2.5
+--задание 2.5 (исправленное)
 select name_song from songs
-where name_song like '%My%' or name_song like '%Мой%';
+where name_song ilike 'my %' or name_song ilike '% my' or name_song ilike '% my %' or name_song ilike 'my' 
+or name_song ilike 'мой %' or name_song ilike '% мой' or name_song ilike '% мой %' or name_song ilike 'мой';
 
 
 --задание 3.1 (один исполнитель подходит под несколько жанров, поэтому число такое большое)
@@ -26,23 +27,20 @@ join genres g on ga.genre_id = g.genre_id
 group by genre_name
 order by count(artist_id);
 
---задание 3.2
-select name_album, year_release from albums a
-join songs s on s.album_id = a.album_id
-where year_release between 2019 and 2020
-group by name_album, year_release;
+--задание 3.2(исправлено)
+select count(name_song) from songs s
+join albums a  on s.album_id = a.album_id
+where year_release between 2019 and 2020;
 
 --задание 3.3
 select name_album, avg(duration_song) from albums a
 join songs s on s.album_id = a.album_id
 group by name_album;
 
---задание 3.4
+--задание 3.4 (исправлено)
 select artist_name from artists a
-join album_artist aa on a.artist_id = aa.artist_id 
-join albums a2 on a2.album_id = aa.album_id
-where artist_name not in (select artist_name from artists a3  where year_release = '2020')
-group by artist_name;
+where artist_name not in (select artist_name from artists a join album_artist aa on a.artist_id=aa.artist_id join albums a2 on a2.album_id=aa.album_id 
+where year_release = '2020');
 
 
 --задание 3.5 
@@ -56,14 +54,14 @@ where artist_name like '%Deep%'
 group by name_collection, artist_name;
 
 
---задание 4.1 (все исполнители подходят под это условие, допом указано в скольких жанрах играют исполнители)
-select name_album, count(genre_name) from albums a 
+--задание 4.1 (исправлено)
+select distinct name_album from albums a 
 join album_artist aa on aa.album_id = a.album_id 
-join artists a2 on a2.artist_id = aa.artist_id 
-join genre_artist ga on ga.artist_id = a2.artist_id 
-join genres g on ga.genre_id = g.genre_id 
-group by name_album
-having count(genre_name) > 1;
+join artists ar on ar.artist_id = aa.artist_id 
+join genre_artist ga on ga.artist_id = ar.artist_id 
+group by name_album, ga.artist_id
+having count(genre_id) > 1;
+
 
 --задание 4.2
 select name_song from songs s 
@@ -79,10 +77,11 @@ join songs s on s.album_id = aa.album_id
 group by artist_name, name_song, duration_song
 having duration_song <= (select min(duration_song)  from songs);
 
---задание 4.4
-select name_album, count(name_song) from albums a 
+--задание 4.4 (исправлено)
+select name_album from albums a 
 join songs s on s.album_id = a.album_id
 group by name_album
+having count(song_id) = (select count(song_id) from songs s group by album_id order by 1 limit 1);
 
 
 
